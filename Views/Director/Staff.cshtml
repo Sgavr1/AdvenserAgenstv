@@ -1,0 +1,22 @@
+﻿@using AdvertisingAgency.Models;
+@using AdvertisingAgency.Models.CompositeModel;
+
+<html>
+<body>
+    <div>
+        @foreach(Staff_StaffPosition_Position staff in ViewBag.Staffs)
+        {
+            <div>
+                <p>Имя @staff.staff.first_name</p>
+                <p>Фамилия @staff.staff.last_name</p>
+                <p>День рождения @staff.staff.date_of_birthday.ToString("dd-MM-yyyy") </p>
+                <p>Пол @staff.staff.sex </p>
+                <p>Номер телефона @staff.staff.tel </p>
+                <p>Дата устройство на работу @staff.staffPosition.start_work.ToString("dd-MM-yyyy") </p>
+                <p>Должность @staff.position.name </p>
+                <p>Зарплата @staff.position.salary </p>
+            </div>
+         }
+    </div>
+</body>
+</html>
