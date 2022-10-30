@@ -128,5 +128,11 @@ namespace AdvertisingAgency.Controllers
 
             return Redirect("/Client");
         }
+
+        public IActionResult Out()
+        {
+            client = null;
+            return Redirect("/Login");
+        }
     }
 }

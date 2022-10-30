@@ -1,0 +1,63 @@
+﻿@using AdvertisingAgency.Models;
+@using AdvertisingAgency.Models.CompositeModel;
+
+<html>
+<body>
+    <nav>
+        <a href="/Director/Staff">Сотрудники</a>
+        <a href="/Director/Out">Выход</a>
+    </nav>
+    <div>
+        <p>Форма добавления нового партнера</p>
+        <form action="/director/AddPartner">
+            <ul>
+                <li>
+                    <label>Название компании</label>
+                </li>
+                <li>
+                    <input type="text" name="name" />
+                </li>
+            </ul>
+            <button type="submit">Добавить компанию</button>
+        </form>
+    </div>
+    <div>
+        @foreach(Partners_Services partner in ViewBag.Partners)
+         {
+            <div>
+                <div>
+                    <p>Партнёр @partner.partners.name</p>
+                    @foreach(TypeOfServiceModel service in partner.services)
+                     {
+                        <p>Тип услуги @service.platform_type</p>
+                        <p>Цена за один показ рекламы @service.price</p>
+                     }
+                </div>
+                <div>
+                    <p>Форма добавления новой услугу партёру @partner.partners.name</p>
+                    <form action="/Director/AddService">
+                        <ul>
+                            <li>
+                                <input type="number" name="partner" value="@partner.partners.id" />
+                            </li>
+                            <li>
+                                <label>Названия услуги</label>
+                            </li>
+                            <li>
+                                <input type="text" name="name" />
+                            </li>
+                            <li>
+                                <label>Цена за один показ</label>
+                            </li>
+                            <li>
+                                <input type="number" name="price" />
+                            </li>
+                        </ul>
+                        <button type="submit">Добавить</button>
+                    </form>
+                </div>
+            </div>
+         }
+    </div>
+</body>
+</html>

@@ -105,3 +105,4 @@ C:\Users\Alex\Desktop\БД Настя\git\AdvenserAgenstv\obj\Debug\netcoreapp3.
 C:\Users\Alex\Desktop\БД Настя\git\AdvenserAgenstv\obj\Debug\netcoreapp3.1\AdvertisingAgency.dll
 C:\Users\Alex\Desktop\БД Настя\git\AdvenserAgenstv\obj\Debug\netcoreapp3.1\AdvertisingAgency.pdb
 C:\Users\Alex\Desktop\БД Настя\git\AdvenserAgenstv\obj\Debug\netcoreapp3.1\AdvertisingAgency.genruntimeconfig.cache
+C:\Users\Alex\Desktop\БД Настя\git\AdvenserAgenstv\obj\Debug\netcoreapp3.1\Razor\Views\Director\Partner.cshtml.g.cs

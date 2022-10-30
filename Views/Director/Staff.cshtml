@@ -3,20 +3,106 @@
 
 <html>
 <body>
+    <nav>
+        <a href="/Director/Partner">Партнёры</a>
+        <a href="/Director/Out">Выйти</a>
+    </nav>
     <div>
-        @foreach(Staff_StaffPosition_Position staff in ViewBag.Staffs)
-        {
-            <div>
-                <p>Имя @staff.staff.first_name</p>
-                <p>Фамилия @staff.staff.last_name</p>
-                <p>День рождения @staff.staff.date_of_birthday.ToString("dd-MM-yyyy") </p>
-                <p>Пол @staff.staff.sex </p>
-                <p>Номер телефона @staff.staff.tel </p>
-                <p>Дата устройство на работу @staff.staffPosition.start_work.ToString("dd-MM-yyyy") </p>
-                <p>Должность @staff.position.name </p>
-                <p>Зарплата @staff.position.salary </p>
-            </div>
-         }
+        <form action="AddStaff">
+            <ul>
+                <li>
+                    <label>Имя</label>
+                </li>
+                <li>
+                    <input type="text" name="first_name" />
+                </li>
+                <li>
+                    <label>Фамилия</label>
+                </li>
+                <li>
+                    <input type="text" name="last_name" />
+                </li>
+                <li>
+                    <label>Дата рождения</label>
+                </li>
+                <li>
+                    <input type="date" name="date_of_birthday"/>
+                </li>
+                <li>
+                    <label>Пол</label>
+                </li>
+                <li>
+                    <input id="1" value="m" name="sex" type="radio" />
+                    <label for="1">Мужской</label>
+                    <input id="2" value="f" name="sex" type="radio" />
+                    <label for="2">Женский</label>
+                </li>
+                <li>
+                    <label>Должность</label>
+                </li>
+                <li>
+                    <input id="2" value="2" name="position" type="radio" />
+                    <label for="2">Менеджер</label>
+                    <input id="3" value="3" name="position" type="radio" />
+                    <label for="3">Креативный Менеджер</label>
+                </li>
+                <li>
+                    <label>Номер телефона</label>
+                </li>
+                <li>
+                    <input type="tel" name="tel" />
+                </li>
+                <li>
+                    <label>Пароль</label>
+                </li>
+                <li>
+                    <input type="text" name="password" />
+                </li>
+            </ul>
+            <button>Добавить нового сотрудника</button>
+        </form>
     </div>
+    @if (ViewBag.WorkingStaffs.Count > 0)
+     {
+        <div>
+            @foreach (Staff_StaffPosition_Position staff in ViewBag.WorkingStaffs)
+             {
+                @if (staff.position.name != "Director")
+                 {
+                    <div>
+                        <p>Имя @staff.staff.first_name</p>
+                        <p>Фамилия @staff.staff.last_name</p>
+                        <p>День рождения @staff.staff.date_of_birthday.ToString("dd-MM-yyyy") </p>
+                        <p>Пол @staff.staff.sex </p>
+                        <p>Номер телефона @staff.staff.tel </p>
+                        <p>Дата устройство на работу @staff.staffPosition.start_work.ToString("dd-MM-yyyy") </p>
+                        <p>Должность @staff.position.name </p>
+                        <p>Зарплата @staff.position.salary </p>
+                        <a href="/Director/FireStaff/@staff.staffPosition.id">Уволить</a>
+                    </div>
+                 }
+             }
+        </div>
+     }
+    @if (ViewBag.FireStaffs.Count > 0)
+    {
+        <p>Уволеные сотрудники</p>
+        <div>
+            @foreach (Staff_StaffPosition_Position staff in ViewBag.FireStaffs)
+            {
+                <div>
+                    <p>Уволен</p>
+                    <p>Имя @staff.staff.first_name</p>
+                    <p>Фамилия @staff.staff.last_name</p>
+                    <p>День рождения @staff.staff.date_of_birthday.ToString("dd-MM-yyyy") </p>
+                    <p>Пол @staff.staff.sex </p>
+                    <p>Номер телефона @staff.staff.tel </p>
+                    <p>Дата устройство на работу @staff.staffPosition.start_work.ToString("dd-MM-yyyy") </p>
+                    <p>Дата увольнения @staff.staffPosition.end_work.ToString("dd-MM-yyyy") </p>
+                    <p>Должность @staff.position.name </p>
+                </div>
+            }
+        </div>
+    }
 </body>
 </html>

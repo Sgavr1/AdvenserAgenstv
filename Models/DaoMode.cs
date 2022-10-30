@@ -43,6 +43,65 @@ namespace AdvertisingAgency.Models
             return false;
         }
 
+        public static bool GetStaffByTel(StaffModel staff, string postgres)
+        {
+            string request = $"Select * From Staff where tel = '{staff.tel}'";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] render in info)
+            {
+                staff.id = int.Parse(render[0]);
+                staff.first_name = render[1];
+                staff.last_name = render[2];
+                staff.date_of_birthday = DateTime.Parse(render[3]);
+                staff.sex = render[4];
+                staff.tel = render[5];
+                staff.password = render[6];
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool AddStaff(Staff_StaffPosition_Position staff, string postgres)
+        {
+            if(staff.staff.first_name == "" || staff.staff.last_name == "" || staff.staff.sex == "" || staff.position.id <= 0 || staff.staff.tel == "" || staff.staff.tel.Length > 13 || staff.staff.tel.Length < 12 || staff.staff.date_of_birthday == new DateTime())
+            {
+                return false;
+            }
+
+            if(GetStaffByTel(staff.staff, postgres))
+            {
+                return false;
+            }
+
+            string request = $"Insert Into Staff(first_name,last_name,date_of_birthday,sex,tel,password) Values('{staff.staff.first_name}','{staff.staff.last_name}','{staff.staff.date_of_birthday.ToString("dd-MM-yyyy")}','{staff.staff.sex}','{staff.staff.tel}','{staff.staff.password}') Returning id";
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                staff.staff.id = int.Parse(reader[0]);
+            }
+
+            staff.staffPosition = new StaffPositionModel();
+            staff.staffPosition.staff_id = staff.staff.id;
+            staff.staffPosition.position_id = staff.position.id;
+            staff.staffPosition.start_work = DateTime.Now;
+
+            if (AddStaffPosition(staff.staffPosition, postgres))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static void FireStaff(StaffPositionModel staff, string postgres)
+        {
+            string request = $"Update Staff_Position set end_work = '{DateTime.Now.ToString("dd-MM-yyyy")}' where id = '{staff.id}';";
+            Request(request, postgres);
+        }
+
         public static bool ClientLogin(ClientCompanyModel client, string postgres)
         {
             string request = $"Select ClientLogin_tel('{client.tel}', '{client.password}');";
@@ -192,6 +251,19 @@ namespace AdvertisingAgency.Models
             return false;
         }
 
+        public static bool AddStaffPosition(StaffPositionModel staffPosition, string postgres)
+        {
+            string request = $"Insert Into Staff_position(staff_id,position_id,start_work) Values('{staffPosition.staff_id}','{staffPosition.position_id}','{staffPosition.start_work}') Returning id;";
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                staffPosition.id = int.Parse(reader[0]);
+            }
+
+            return true;
+        }
+
         public static bool GetPreferencesListById(PreferenseListModel preference, string postgres)
         {
             string request = $"Select * From Preference_List Where id = '{preference.id}'";
@@ -323,6 +395,73 @@ namespace AdvertisingAgency.Models
                 return true;
             }
             return false;
+        }
+
+        public static bool CheckPartnerByName(PartnersModel partner, string postgres)
+        {
+            string request = $"Select * From Partners Where name = '{partner.name}'";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                partner.id = int.Parse(reader[0]);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool AddPartner(PartnersModel partner, string postgres)
+        {
+            if(partner.name == "")
+            {
+                return false;
+            }
+
+            string request = $"Insert Into Partners(name) Values('{partner.name}') Returning id;";
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                partner.id = int.Parse(reader[0]);
+            }
+            
+            return true;
+        }
+
+        public static bool CheckService(TypeOfServiceModel service, string postgres)
+        {
+            string request = $"Select * From Type_of_service Where platform_type = '{service.platform_type}' and partners_id = '{service.partners_id}';";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                service.id = int.Parse(reader[0]);
+                service.platform_type = reader[1];
+                service.partners_id = int.Parse(reader[2]);
+                service.price = float.Parse(reader[3]);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool AddService(TypeOfServiceModel service, string postgres)
+        {
+            if (service.platform_type == "" || service.price <= 0)
+            {
+                return false;
+            }
+
+            string request = $"Insert Into Type_of_Service(platform_type,partners_id,price) Values('{service.platform_type}','{service.partners_id}','{service.price}') Returning id;";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                service.id = int.Parse(reader[0]);
+            }
+
+            return true;
         }
 
         //public static bool 
@@ -538,6 +677,54 @@ namespace AdvertisingAgency.Models
             }
 
             return preference_MediaPlans;
+        }
+
+        public static List<Partners_Services> GetFullPartnersService(string postgres)
+        {
+            List<Partners_Services> partners_Services = new List<Partners_Services>();
+
+            string request = $"Select * From Partners";
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                Partners_Services p_s = new Partners_Services();
+
+                p_s.partners = new PartnersModel();
+                p_s.partners.id = int.Parse(reader[0]);
+                p_s.partners.name = reader[1];
+
+                partners_Services.Add(p_s);
+            }
+
+            foreach(Partners_Services p in partners_Services)
+            {
+                p.services = GetAllService(p.partners,postgres);
+            }
+
+            return partners_Services;
+        }
+
+        public static List<TypeOfServiceModel> GetAllService(PartnersModel partners, string postgres)
+        {
+            List<TypeOfServiceModel> services = new List<TypeOfServiceModel>();
+
+            string request = $"Select * From Type_of_Service where partners_id = '{partners.id}'";
+
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                TypeOfServiceModel s = new TypeOfServiceModel();
+                s.id = int.Parse(reader[0]);
+                s.platform_type = reader[1];
+                s.partners_id = int.Parse(reader[2]);
+                s.price = float.Parse(reader[3]);
+
+                services.Add(s);
+            }
+
+            return services;
         }
 
         private static List<string[]> Request(string request,string postgres)
