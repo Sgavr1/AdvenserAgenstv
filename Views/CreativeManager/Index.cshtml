@@ -1,1 +1,22 @@
-﻿
+﻿@using AdvertisingAgency.Models;
+@using AdvertisingAgency.Models.CompositeModel;
+<html>
+<body>
+    <div>
+        <p>Назначеный проэкт</p>
+        @if(ViewBag.NoEmpty) 
+        {
+            <p>Краткое описание @ViewBag.Preference.preculiarities</p>
+            <p>Аудитория @ViewBag.Preference.audience</p>
+            <p>Спецификация работи @ViewBag.Working.specification</p>
+            <p>Выполненая работа @ViewBag.Working.description</p>
+            <form action="/CreativeManager/Update">
+                <label>Выполненая работа</label>
+                <input type="text" name="description"/>
+                <button type="submit">Добавить</button>
+            </form>
+            <a href="/CreativeManager/Finish">Робота Готова</a>
+        }
+    </div>
+</body>
+</html>

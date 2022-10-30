@@ -9,6 +9,33 @@ namespace AdvertisingAgency.Models
 {
     public static class DaoMode
     {
+        public static void UpdateWorking(CreativeWorkModel creative, string postgreas)
+        {
+            Request($"Update Creative_work Set description = '{creative.description}' where id = '{creative.id}'", postgreas);
+        }
+
+        public static void FinishWorking(CreativeWorkModel creative, string postgreas)
+        {
+            Request($"Update Creative_work Set work_status = 'true' where id = '{creative.id}'", postgreas);
+        }
+
+        public static bool GetMediaPlanById(MediaPlanModel media, string postgreas)
+        {
+            foreach(string[] reader in Request($"Select * From Media_plan where id = '{media.id}'", postgreas))
+            {
+                media.preferences_list_id = int.Parse(reader[1]);
+                media.type_of_service_id = int.Parse(reader[2]);
+                media.staff_id = int.Parse(reader[3]);
+                media.broadcast_time = int.Parse(reader[4]);
+                media.price = float.Parse(reader[5]);
+                media.status = bool.Parse(reader[6]);
+
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool StaffLogin(StaffModel staff, string postgres)
         {
             string request = $"Select Stafflogin('{staff.tel}', '{staff.password}');";
@@ -301,6 +328,43 @@ namespace AdvertisingAgency.Models
             return true;
         }
 
+        public static Client_Preferense GetNotAcceptedPreferenceListById(PreferenseListModel preferense,string postgres)
+        {
+            Client_Preferense preferenseLists = new Client_Preferense();
+
+            string request = $"Select * From GetPreferenceList() where id = '{preferense.id}';";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                Client_Preferense c_p = new Client_Preferense();
+                c_p.preference = new PreferenseListModel();
+
+                c_p.preference.id = int.Parse(reader[0]);
+                c_p.preference.client_id = int.Parse(reader[1]);
+                c_p.preference.audience = reader[2];
+                c_p.preference.preculiarities = reader[3];
+                c_p.preference.period = int.Parse(reader[4]);
+                c_p.preference.max_sum = float.Parse(reader[5]);
+
+                c_p.client = new ClientCompanyModel();
+
+                c_p.client.id = int.Parse(reader[6]);
+                c_p.client.company_name = reader[7];
+                c_p.client.director = reader[8];
+                c_p.client.city = reader[9];
+                c_p.client.street = reader[10];
+                c_p.client.first_name = reader[11];
+                c_p.client.last_name = reader[12];
+                c_p.client.tel = reader[13];
+                c_p.client.email = reader[14];
+
+                preferenseLists = c_p;
+            }
+
+            return preferenseLists;
+        }
+
         public static bool CheckMediaPlanByPreference(MediaPlanModel mediaPlan, string postgres)
         {
             string request = $"Select * From Media_Plan where preference_list_id = '{mediaPlan.preferences_list_id}'";
@@ -318,6 +382,19 @@ namespace AdvertisingAgency.Models
             }
 
             return false;
+        }
+
+        public static bool AddMediaPlan(MediaPlanModel mediaPlan, string postgreas)
+        {
+            string request = $"Insert Into Media_Plan(preference_list_id,type_of_service_id,staff_id,broadcast_time,price,status) Values('{mediaPlan.preferences_list_id}','{mediaPlan.type_of_service_id}','{mediaPlan.staff_id}','{mediaPlan.broadcast_time}','{mediaPlan.price}','false') Returning id;";
+            List<string[]> info = Request(request, postgreas);
+
+            foreach(string[] reader in info)
+            {
+                mediaPlan.id = int.Parse(reader[0]);
+            }
+
+            return true;
         }
 
         public static bool CheckBeforeTheContractByMediaPlan(BeforeTheContractModel before, string postgres)
@@ -446,6 +523,23 @@ namespace AdvertisingAgency.Models
             return false;
         }
 
+        public static bool GetServiceById(TypeOfServiceModel service, string postgres)
+        {
+            string request = $"Select * From Type_of_service Where id = '{service.id}';";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                service.id = int.Parse(reader[0]);
+                service.platform_type = reader[1];
+                service.partners_id = int.Parse(reader[2]);
+                service.price = float.Parse(reader[3]);
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool AddService(TypeOfServiceModel service, string postgres)
         {
             if (service.platform_type == "" || service.price <= 0)
@@ -462,6 +556,24 @@ namespace AdvertisingAgency.Models
             }
 
             return true;
+        }
+
+        public static bool AddCreativeWork(CreativeWorkModel creative, string posgres)
+        {
+            string request = $"Insert Into Creative_work(media_plan_id,work_status,worker_id,specification,description) Values('{creative.media_plan_id}','{creative.work_status}','{creative.worker_id}','{creative.specification}','{creative.description}') Returning id;";
+            List<string[]> info = Request(request, posgres);
+            foreach(string[] reader in info)
+            {
+                creative.id = int.Parse(reader[0]);
+            }
+
+            return true;
+        }
+
+        public static void FinishMedia(MediaPlanModel media, string postgres)
+        {
+            string request = $"Update Media_plan set status = true Where id = '{media.id}'";
+            Request(request, postgres);
         }
 
         //public static bool 
@@ -605,6 +717,77 @@ namespace AdvertisingAgency.Models
             return preferenseLists;
         }
 
+        public static List<Client_Preferense> GetAllNotAcceptedPreferenceList(string postgres)
+        {
+            List<Client_Preferense> preferenseLists = new List<Client_Preferense>();
+
+            string request = "Select * From GetPreferenceList();";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                Client_Preferense c_p = new Client_Preferense();
+                c_p.preference = new PreferenseListModel();
+
+                c_p.preference.id = int.Parse(reader[0]);
+                c_p.preference.client_id = int.Parse(reader[1]);
+                c_p.preference.audience = reader[2];
+                c_p.preference.preculiarities = reader[3];
+                c_p.preference.period = int.Parse(reader[4]);
+                c_p.preference.max_sum = float.Parse(reader[5]);
+
+                c_p.client = new ClientCompanyModel();
+
+                c_p.client.id = int.Parse(reader[6]);
+                c_p.client.company_name = reader[7];
+                c_p.client.director = reader[8];
+                c_p.client.city = reader[9];
+                c_p.client.street = reader[10];
+                c_p.client.first_name = reader[11];
+                c_p.client.last_name = reader[12];
+                c_p.client.tel = reader[13];
+                c_p.client.email = reader[14];
+
+                preferenseLists.Add(c_p);
+            }
+
+            return preferenseLists;
+        }
+
+        public static List<Preference_MediaPlan> GetAllAcceptedPreferenceListByStaff(StaffModel staff,string postgres)
+        {
+            List<Preference_MediaPlan> preferenseLists = new List<Preference_MediaPlan>();
+
+            string request = $"Select * From GetAcceptedPreferenceListByStaff('{staff.id}') where status = 'false';";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                Preference_MediaPlan c_p = new Preference_MediaPlan();
+                c_p.preference = new PreferenseListModel();
+
+                c_p.preference.id = int.Parse(reader[0]);
+                c_p.preference.audience = reader[1];
+                c_p.preference.preculiarities = reader[2];
+                c_p.preference.period = int.Parse(reader[3]);
+                c_p.preference.max_sum = float.Parse(reader[4]);
+
+                MediaPlanModel mediaPlan = new MediaPlanModel();
+                mediaPlan.id = int.Parse(reader[5]);
+                mediaPlan.preferences_list_id = c_p.preference.id;
+                mediaPlan.type_of_service_id = int.Parse(reader[6]);
+                mediaPlan.staff_id = int.Parse(reader[7]);
+                mediaPlan.broadcast_time = int.Parse(reader[8]);
+                mediaPlan.price = float.Parse(reader[9]);
+                mediaPlan.status = bool.Parse(reader[10]);
+                c_p.mediaPlan = mediaPlan;
+
+                preferenseLists.Add(c_p);
+            }
+
+            return preferenseLists;
+        }
+
         public static List<PreferenseListModel> GetAllPreferencListClient(ClientCompanyModel client, string postgres)
         {
             List<PreferenseListModel> preferenseLists = new List<PreferenseListModel>();
@@ -725,6 +908,94 @@ namespace AdvertisingAgency.Models
             }
 
             return services;
+        }
+
+        public static List<CreativeWorkModel> GetAllCreativeWorkingByMedia(MediaPlanModel media, string postgres)
+        {
+            List<CreativeWorkModel> creativeWorks = new List<CreativeWorkModel>();
+
+            string request = $"Select * From Creative_work where media_plan_id = '{media.id}';";
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                CreativeWorkModel creative = new CreativeWorkModel();
+                creative.id = int.Parse(reader[0]);
+                creative.media_plan_id = int.Parse(reader[1]);
+                creative.work_status = bool.Parse(reader[2]);
+                creative.worker_id = int.Parse(reader[3]);
+                creative.specification = reader[4];
+                creative.description = reader[5];
+
+                creativeWorks.Add(creative);
+            }
+
+            return creativeWorks;
+        }
+
+        public static bool GetCreativeWorkingByStaff(CreativeWorkModel creativeWork, string postgres)
+        {
+            string request = $"Select * From Creative_work where worker_id = '{creativeWork.worker_id}' and work_status = 'false';";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                creativeWork.id = int.Parse(reader[0]);
+                creativeWork.media_plan_id = int.Parse(reader[1]);
+                creativeWork.work_status = bool.Parse(reader[2]);
+                creativeWork.worker_id = int.Parse(reader[3]);
+                creativeWork.specification = reader[4];
+                creativeWork.description = reader[5];
+                return true;
+            }
+
+            return false;
+        }
+
+        public static List<StaffModel> GetAllFreeStaff(string postgres)
+        {
+            List<StaffModel> staffs = new List<StaffModel>();
+
+            string request = $"Select GetAllFreeStaff();";
+            List<string[]> info = Request(request, postgres);
+
+            foreach(string[] reader in info)
+            {
+                StaffModel staff = new StaffModel();
+                staff.id = int.Parse(reader[0]);
+
+                staffs.Add(staff);
+            }
+
+            foreach(StaffModel s in staffs)
+            {
+                GetStaffById(s, postgres);
+            }
+
+            return staffs;
+        }
+
+        public static List<StaffModel> GetAllBuysStaff(MediaPlanModel media, string postgres)
+        {
+            List<StaffModel> staffs = new List<StaffModel>();
+
+            string request = $"Select GetAllBusyStaff('{media.id}');";
+            List<string[]> info = Request(request, postgres);
+
+            foreach (string[] reader in info)
+            {
+                StaffModel staff = new StaffModel();
+                staff.id = int.Parse(reader[0]);
+
+                staffs.Add(staff);
+            }
+
+            foreach (StaffModel s in staffs)
+            {
+                GetStaffById(s, postgres);
+            }
+
+            return staffs;
         }
 
         private static List<string[]> Request(string request,string postgres)

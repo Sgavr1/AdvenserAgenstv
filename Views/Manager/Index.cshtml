@@ -1,1 +1,24 @@
-﻿
+﻿@using AdvertisingAgency.Models;
+@using AdvertisingAgency.Models.CompositeModel;
+
+<html>
+<body>
+    <nav>
+        <a href="/Manager/Preference">Заказы</a>
+        <a href="/Manager/Out">Выход</a>
+    </nav>
+    <div>
+        <p>Список принятых заказов</p>
+        @foreach (Preference_MediaPlan media in ViewBag.WorkingMediaPlan)
+        {
+            <p>Возрастная группа @media.preference.audience</p>
+            <p>Краткое содержание @media.preference.preculiarities</p>
+            <p>Период @media.preference.period</p>
+            <p>Максимальная сумма @media.preference.max_sum</p>
+            <p>Количество показав в сутки @media.mediaPlan.broadcast_time</p>
+            <p>Цена за услуги @media.mediaPlan.price</p>
+            <a href="/manager/ControleProject/@media.preference.id">Управление заказом</a>
+        }
+    </div>
+</body>
+</html>

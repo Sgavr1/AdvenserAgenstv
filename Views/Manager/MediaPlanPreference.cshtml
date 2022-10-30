@@ -1,0 +1,54 @@
+﻿@using AdvertisingAgency.Models;
+@using AdvertisingAgency.Models.CompositeModel;
+
+<html>
+<body>
+    <nav>
+        <a href="/Manager">Главная</a>
+        <a href="/Manager/Out">Выход</a>
+    </nav>
+    <div>
+        <div>
+            <p>Название компании @ViewBag.Preference.client.company_name</p>
+            <p>Директор @ViewBag.Preference.client.director</p>
+            <p>Город @ViewBag.Preference.client.city улица @ViewBag.Preference.client.street</p>
+            <p>Email @ViewBag.Preference.client.email Номер телефона @ViewBag.Preference.client.tel</p>
+            <p>Аудитория @ViewBag.Preference.preference.audience</p>
+            <p>Каткое описание @ViewBag.Preference.preference.preculiarities</p>
+            <p>Максимальнпая сумма @ViewBag.Preference.preference.max_sum</p>
+            <p>Период @ViewBag.Preference.preference.period</p>
+        </div>
+        @if(ViewBag.Service == null)
+         {
+            @foreach(Partners_Services parter in ViewBag.Partners)
+             {
+                <div>
+                    <p>Компания @parter.partners.name</p>
+                    @foreach(TypeOfServiceModel service in parter.services)
+                    {
+                        <div>
+                            <p>Тип @service.platform_type</p>
+                            <p>Цена за 1 показ @service.price</p>
+                            <a href="/Manager/SelectParterServise/@service.id">Выбрать</a>
+                        </div>
+                    }
+                </div>
+             }
+         }
+         else
+         {
+            <form action="/Manager/AddMediaPlan">
+                <ul>
+                    <li>
+                        <label>Показов в день</label>
+                    </li>
+                    <li>
+                        <input type="number" name="broadcast"/>
+                    </li>
+                </ul>
+                <button type="submit">Создать медиа план</button>
+            </form>
+         }
+    </div>
+</body>
+</html>

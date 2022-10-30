@@ -31,10 +31,10 @@ namespace AdvertisingAgency.Controllers
                 DaoMode.GetStaffPositionByStaffId(staffPosition, postgres);
                 if(staffPosition.position_id == 1)
                     return Redirect("/Director/ToLogin/"+staff.id);
-                if (staffPosition.position_id == 2)
-                    return Redirect("/CreativeManager");
                 if (staffPosition.position_id == 3)
-                    return Redirect("/Manager");
+                    return Redirect("/CreativeManager/ToLogin/"+staff.id);
+                if (staffPosition.position_id == 2)
+                    return Redirect("/Manager/ToLogin/"+staff.id);
 
                 return Redirect("/Director");
             }
