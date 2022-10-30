@@ -8,6 +8,5 @@ namespace AdvertisingAgency.Models
     public class PartnersModel : BaseModel
     {
         public string name { get; set; }
-        public int price_id { get; set; }
     }
 }

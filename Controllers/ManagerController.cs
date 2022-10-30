@@ -8,6 +8,7 @@ namespace AdvertisingAgency.Controllers
 {
     public class ManagerController : Controller
     {
+        private const string postgres = "postgres";
         public IActionResult Index()
         {
             return View();

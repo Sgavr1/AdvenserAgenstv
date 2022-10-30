@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nPFZYLIkAR+Mup3yyhi4tC/RCHbHyS9or30rAPMW1uDjm3CkU03rRv2xkzN5gRO6bu30tsl7zUIc2ACLjhLpBQ==",
+  "dgSpecHash": "FRzhJvbdfeWAyVBlW1P57uHKfMHgISaJtnzO9Dp/4Ys4FriaSkoxJ1tqPtzYrNTAxlL5dTkdPS4O1d+cjFTK+w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Alex\\Desktop\\БД Настя\\AdvertisingAgency\\AdvertisingAgency.csproj",
+  "projectFilePath": "C:\\Users\\Alex\\Desktop\\БД Настя\\git\\AdvenserAgenstv\\AdvertisingAgency.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alex\\.nuget\\packages\\microsoft.entityframeworkcore\\5.0.10\\microsoft.entityframeworkcore.5.0.10.nupkg.sha512",
     "C:\\Users\\Alex\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\5.0.10\\microsoft.entityframeworkcore.abstractions.5.0.10.nupkg.sha512",

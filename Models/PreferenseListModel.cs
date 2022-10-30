@@ -11,5 +11,6 @@ namespace AdvertisingAgency.Models
         public string audience { get; set; }
         public string preculiarities { get; set; }
         public int period { get; set; }
+        public float max_sum { get; set; }
     }
 }

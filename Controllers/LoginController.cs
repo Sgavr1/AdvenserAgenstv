@@ -13,7 +13,6 @@ namespace AdvertisingAgency.Controllers
         public IActionResult Index()
         {
 
-            //return ToLogin("+380996305684", "qwerty");
             return View();
         }
 
@@ -42,7 +41,7 @@ namespace AdvertisingAgency.Controllers
 
             if(DaoMode.ClientLogin(client, postgres))
             {
-                return Redirect("/Client");
+                return Redirect("/Client/ToLogin/"+client.id);
             }
 
             return Redirect("/Login");

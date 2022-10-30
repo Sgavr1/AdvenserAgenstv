@@ -689,11 +689,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Alex\\Desktop\\БД Настя\\AdvertisingAgency\\AdvertisingAgency.csproj",
+      "projectUniqueName": "C:\\Users\\Alex\\Desktop\\БД Настя\\git\\AdvenserAgenstv\\AdvertisingAgency.csproj",
       "projectName": "AdvertisingAgency",
-      "projectPath": "C:\\Users\\Alex\\Desktop\\БД Настя\\AdvertisingAgency\\AdvertisingAgency.csproj",
+      "projectPath": "C:\\Users\\Alex\\Desktop\\БД Настя\\git\\AdvenserAgenstv\\AdvertisingAgency.csproj",
       "packagesPath": "C:\\Users\\Alex\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Alex\\Desktop\\БД Настя\\AdvertisingAgency\\obj\\",
+      "outputPath": "C:\\Users\\Alex\\Desktop\\БД Настя\\git\\AdvenserAgenstv\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

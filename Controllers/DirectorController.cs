@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AdvertisingAgency.Models;
 using AdvertisingAgency.Models.CompositeModel;
 
@@ -11,19 +8,19 @@ namespace AdvertisingAgency.Controllers
     public class DirectorController : Controller
     {
         private const string postgres = "postgres";
-        public static StaffModel staff;
-        public static StaffPositionModel staffPosition;
+        private static StaffModel staff;
+        private static StaffPositionModel staffPosition;
 
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult ToLogin(int staff_id)
+        public IActionResult ToLogin(int id)
         {
             staff = new StaffModel();
             staffPosition = new StaffPositionModel();
-            staff.id = staffPosition.staff_id = staff_id;
+            staff.id = staffPosition.staff_id = id;
 
             DaoMode.GetStaffById(staff, postgres);
             DaoMode.GetStaffPositionByStaffId(staffPosition, postgres);
@@ -40,9 +37,19 @@ namespace AdvertisingAgency.Controllers
             return View();
         }
 
+
+
         public IActionResult UpStaff()
         {
             return Redirect("/Director/Staff");
+        }
+
+        public IActionResult Out()
+        {
+            staff = null;
+            staffPosition = null;
+
+            return Redirect("/Login");
         }
     }
 }

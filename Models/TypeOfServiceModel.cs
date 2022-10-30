@@ -9,5 +9,6 @@ namespace AdvertisingAgency.Models
     {
         public string platform_type { get; set; }
         public int partners_id { get; set; }
+        public float price { get; set; }
     }
 }

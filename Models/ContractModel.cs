@@ -14,6 +14,6 @@ namespace AdvertisingAgency.Models
         public string post_code { get; set; }
         public int inn { get; set; }
         public string payment_method { get; set; }
-        public bool status { get; set; }
+        public string status { get; set; }
     }
 }
