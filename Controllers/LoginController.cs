@@ -9,7 +9,7 @@ namespace AdvertisingAgency.Controllers
 {
     public class LoginController : Controller
     {
-        const string postgres = "postgres"; 
+        const string postgres = "loginto"; 
         public IActionResult Index()
         {
 

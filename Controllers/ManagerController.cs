@@ -10,7 +10,7 @@ namespace AdvertisingAgency.Controllers
 {
     public class ManagerController : Controller
     {
-        private const string postgres = "postgres";
+        private const string postgres = "managers";
         private static StaffModel staff;
         private static StaffPositionModel staffPosition;
         public IActionResult Index()

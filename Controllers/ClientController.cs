@@ -10,7 +10,7 @@ namespace AdvertisingAgency.Controllers
 {
     public class ClientController : Controller
     {
-        private const string postgres = "postgres";
+        private const string postgres = "client";
         private static ClientCompanyModel client;
 
         public IActionResult Index()
@@ -38,11 +38,34 @@ namespace AdvertisingAgency.Controllers
 
                     if(p_m.before == null)
                     {
-                        preference_Medias_Accepted.Add(p_m);
+                        bool isAdd = true;
+                        foreach(Preference_MediaPlan pm in preference_Medias_Accepted)
+                        {
+                            if(pm.preference.id == p_m.preference.id)
+                            {
+                                isAdd = false;
+                            }
+                        }
+                        if (isAdd)
+                        {
+                            preference_Medias_Accepted.Add(p_m);
+                        }
                     }
                     else
                     {
-                        preference_Medias_Contract.Add(p_m);
+                        bool isAdd = true;
+                        foreach (Preference_MediaPlan pm in preference_Medias_Contract)
+                        {
+                            if (pm.preference.id == p_m.preference.id)
+                            {
+                                isAdd = false;
+                            }
+                        }
+                        if (isAdd)
+                        {
+                            preference_Medias_Contract.Add(p_m);
+                        }
+                        
                     }
                 }
                 if (!isPush)
@@ -107,7 +130,10 @@ namespace AdvertisingAgency.Controllers
             DaoMode.CheckMediaPlanByPreference(mediaPlan, postgres);
 
             contract.total_sum = mediaPlan.price;
-            DaoMode.AddContract(contract, postgres);
+            if(!DaoMode.AddContract(contract, postgres))
+            {
+                return Redirect("adas");
+            }
 
             BeforeTheContractModel before = new BeforeTheContractModel();
             before.contract_id = contract.id;

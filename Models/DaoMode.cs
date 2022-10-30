@@ -11,7 +11,7 @@ namespace AdvertisingAgency.Models
     {
         public static void UpdateWorking(CreativeWorkModel creative, string postgreas)
         {
-            Request($"Update Creative_work Set description = '{creative.description}' where id = '{creative.id}'", postgreas);
+            Request($"Update Creative_work Set description = '{creative.description}' where id = '{creative.id}';", postgreas);
         }
 
         public static void FinishWorking(CreativeWorkModel creative, string postgreas)

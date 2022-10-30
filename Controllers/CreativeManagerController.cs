@@ -10,7 +10,7 @@ namespace AdvertisingAgency.Controllers
 {
     public class CreativeManagerController : Controller
     {
-        private const string postgres = "postgres";
+        private const string postgres = "creativemanager";
         private static StaffModel staff;
         private static StaffPositionModel staffPosition;
         private static CreativeWorkModel creativeWork;
@@ -45,7 +45,7 @@ namespace AdvertisingAgency.Controllers
 
         public IActionResult Update(string description)
         {
-            creativeWork.description += $" '{description}";
+            creativeWork.description += $" {description}. ";
             DaoMode.UpdateWorking(creativeWork, postgres);
 
             return Redirect("/CreativeManager");

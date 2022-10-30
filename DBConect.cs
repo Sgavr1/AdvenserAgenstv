@@ -8,7 +8,7 @@ namespace AdvertisingAgency.Models
         NpgsqlConnection npgsqlConnection;
         public DBConect(string value)
         {
-            npgsqlConnection = new NpgsqlConnection($"User ID={value};Password=Sanyagavr11;Host=localhost;Port=5432;Database=AdvertisingAgency;");
+            npgsqlConnection = new NpgsqlConnection($"User ID={value};Password={value};Host=localhost;Port=5432;Database=AdvertisingAgency;");
         }
         public void OpenConnection()
         {
