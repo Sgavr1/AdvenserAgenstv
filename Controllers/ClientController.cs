@@ -16,11 +16,44 @@ namespace AdvertisingAgency.Controllers
         public IActionResult Index()
         {
             ViewBag.Client = client;
-            ViewBag.Preferences = DaoMode.GetAllPreferencListClient(client, postgres);
 
+            List<PreferenseListModel> preferenseListsOld = DaoMode.GetAllPreferencListClient(client, postgres);
             PreferenseListModel preferense = new PreferenseListModel();
             preferense.client_id = client.id;
-            ViewBag.AcceptedPreference = DaoMode.GetFullPreferenceListAccepted(preferense, postgres);
+            List<Preference_MediaPlan> preference_Medias = DaoMode.GetFullPreferenceListAccepted(preferense, postgres);
+
+            List<Preference_MediaPlan> preference_Medias_Contract = new List<Preference_MediaPlan>();
+            List<Preference_MediaPlan> preference_Medias_Accepted = new List<Preference_MediaPlan>();
+            List<PreferenseListModel> preferenseListsNow = new List<PreferenseListModel>();
+
+            foreach(PreferenseListModel p in preferenseListsOld)
+            {
+                bool isPush = false;
+                foreach(Preference_MediaPlan p_m in preference_Medias)
+                {
+                    if(p.id == p_m.preference.id)
+                    {
+                        isPush = true;
+                    }
+
+                    if(p_m.before == null)
+                    {
+                        preference_Medias_Accepted.Add(p_m);
+                    }
+                    else
+                    {
+                        preference_Medias_Contract.Add(p_m);
+                    }
+                }
+                if (!isPush)
+                {
+                    preferenseListsNow.Add(p);
+                }
+            }
+
+            ViewBag.Preferences = preferenseListsNow;
+            ViewBag.AcceptedPreference = preference_Medias_Accepted;
+            ViewBag.ContractPreference = preference_Medias_Contract;
 
             return View();
         }
